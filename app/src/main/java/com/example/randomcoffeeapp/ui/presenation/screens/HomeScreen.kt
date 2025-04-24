@@ -14,6 +14,7 @@ import com.example.randomcoffeeapp.ui.theme.RandomCoffeeAppTheme
 
 @Composable
 fun MainScreenGrid(modifier: Modifier = Modifier) {
+    
 }
 
 @Composable
