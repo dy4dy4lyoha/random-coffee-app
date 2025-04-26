@@ -6,7 +6,7 @@ import com.example.randomcoffeeapp.ui.theme.RandomCoffeeAppTheme
 
 @Composable
 fun CoffeeApp() {
-    MainScreen()
+    HomeScreen()
 }
 
 @Composable

@@ -2,10 +2,6 @@ package com.example.randomcoffeeapp.network.responses
 
 import com.google.gson.annotations.SerializedName
 
-data class GetProductResponse(
-    val products: List<Product>
-)
-
 data class Product(
     val id: Int,
     val name: String,

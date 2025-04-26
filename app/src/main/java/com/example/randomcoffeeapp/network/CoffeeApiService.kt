@@ -1,6 +1,5 @@
 package com.example.randomcoffeeapp.network
 
-import com.example.randomcoffeeapp.network.responses.GetProductResponse
 import com.example.randomcoffeeapp.network.responses.Product
 import com.google.gson.GsonBuilder
 import retrofit2.converter.gson.GsonConverterFactory
@@ -12,10 +11,10 @@ import retrofit2.http.Path
 
 interface CoffeeShopApi {
     @GET("v1/products")
-    suspend fun getProducts() : GetProductResponse // getting the all products
+    suspend fun getProducts() : List<Product> // getting the all products
 
     @GET("v1/products/{id}")
-    suspend fun getProduct(@Path("id") id: Int): Product
+    suspend fun getProduct(@Path("id") id: Int): Product // getting the only one product by id
 
 }
 
