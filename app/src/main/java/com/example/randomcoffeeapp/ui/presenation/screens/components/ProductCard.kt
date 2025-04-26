@@ -1,6 +1,7 @@
 
 package com.example.randomcoffeeapp.ui.presenation.screens.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,11 +13,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +34,7 @@ import com.example.randomcoffeeapp.R
 import com.example.randomcoffeeapp.ui.presenation.models.ProductViewModel
 import com.example.randomcoffeeapp.ui.theme.RandomCoffeeAppTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import com.example.randomcoffeeapp.ui.presenation.models.ProductState
 import coil.compose.AsyncImage
 
@@ -37,10 +42,11 @@ import coil.compose.AsyncImage
 fun ProductCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    viewModel: ProductViewModel = viewModel()
+    productViewModel: ProductViewModel = viewModel(),
+    id: Int,
     ) {
 
-    val productState by viewModel.productState.collectAsState()
+    val productState by productViewModel.productState.collectAsState()
 
     // карточка товара
     Card(
@@ -110,6 +116,8 @@ fun ProductCard(
                 Button(
                     onClick = onClick,
                     contentPadding = PaddingValues(0.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF269DD1)),
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(40.dp)
@@ -130,6 +138,6 @@ fun ProductCard(
 @Composable
 fun ProductCardPreview() {
     RandomCoffeeAppTheme {
-        ProductCard(onClick = {})
+        ProductCard(onClick = {}, id = 1)
     }
 }

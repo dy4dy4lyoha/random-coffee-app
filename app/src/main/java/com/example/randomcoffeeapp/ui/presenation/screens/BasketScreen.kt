@@ -1,2 +1,2 @@
-package com.example.randomcoffeeapp.ui.presenation.screens.components
+package com.example.randomcoffeeapp.ui.presenation.screens
 

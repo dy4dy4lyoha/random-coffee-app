@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import com.example.randomcoffeeapp.ui.presenation.screens.components.MainScreen
+import com.example.randomcoffeeapp.ui.presenation.screens.MainScreen
 import com.example.randomcoffeeapp.ui.theme.RandomCoffeeAppTheme
 
 
