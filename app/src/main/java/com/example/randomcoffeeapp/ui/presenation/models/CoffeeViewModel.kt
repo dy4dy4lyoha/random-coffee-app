@@ -25,16 +25,20 @@ class ProductViewModel() : ViewModel() {
     val productState: StateFlow<ProductState> = _productState
 
     // получение 1 продукта по id
-    fun getProduct(id: Int) {
+    fun getProduct(productId: Int) {
         viewModelScope.launch {
             _productState.value = ProductState.Loading
             try {
-                val product = CoffeeApi.coffeeShopApi.getProduct(id)
+                val product = CoffeeApi.coffeeShopApi.getProduct(productId)
                 _productState.value = ProductState.Success(product)
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 _productState.value = ProductState.Error
             }
         }
+    }
+
+    fun setProductState(state: ProductState) {
+        _productState.value = state
     }
 
 //    // получение всех продуктов

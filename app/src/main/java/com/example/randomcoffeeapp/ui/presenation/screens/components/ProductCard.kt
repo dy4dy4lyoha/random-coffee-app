@@ -37,6 +37,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import com.example.randomcoffeeapp.ui.presenation.models.ProductState
 import coil.compose.AsyncImage
+import java.io.IOException
 
 @Composable
 fun ProductCard(
@@ -47,6 +48,15 @@ fun ProductCard(
     ) {
 
     val productState by productViewModel.productState.collectAsState()
+
+    LaunchedEffect(key1 = id) {
+        try {
+            productViewModel.getProduct(id)
+        } catch (e: IOException) {
+            productViewModel.setProductState(ProductState.Error)
+            Log.e("product", "Error $id", e)
+        }
+    }
 
     // карточка товара
     Card(

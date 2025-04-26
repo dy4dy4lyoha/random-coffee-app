@@ -2,10 +2,8 @@ package com.example.randomcoffeeapp.network
 
 import com.example.randomcoffeeapp.network.responses.GetProductResponse
 import com.example.randomcoffeeapp.network.responses.Product
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.google.gson.GsonBuilder
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -16,8 +14,8 @@ interface CoffeeShopApi {
     @GET("v1/products")
     suspend fun getProducts() : GetProductResponse // getting the all products
 
-    @GET("v1/products/product/{id}")
-    suspend fun getProduct(@Path("id") id: Int) : Product // getting the product by ID
+    @GET("api/v1/products/{product_id}")
+    suspend fun getProduct(@Path("product_id") productId: Int): Product
 
 }
 
@@ -30,15 +28,16 @@ object CoffeeApi {
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
+            .build()
 
         // Json parser
-        val json = Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-            coerceInputValues = true
-            explicitNulls = false
-        }
+        val gson = GsonBuilder()
+            .setPrettyPrinting()
+            .serializeNulls()
+            .create()
+
         Retrofit.Builder()
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(BASE_URL)
             .build()

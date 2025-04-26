@@ -10,7 +10,7 @@ data class Product(
     val id: Int,
     val name: String,
     val description: String? = null,
-    val category: Category,
+    val category: Category?,
     @SerializedName("imageUrl") val imageUrl: String? = null,
     val prices: List<Price>
     )
@@ -21,6 +21,6 @@ data class Category(
 )
 
 data class Price(
-    val value: String,
+    val value: Int,
     val currency: String,
 )
