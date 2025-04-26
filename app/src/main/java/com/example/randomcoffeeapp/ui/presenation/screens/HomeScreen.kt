@@ -18,12 +18,12 @@ fun MainScreen(
         verticalArrangement = Arrangement.Center,
     ) {
         Row {
-            ProductCard(onClick = {}, id = 2)
+            ProductCard(onClick = {}, id = 200)
             ProductCard(onClick = {}, id = 4)
         }
         Row {
             ProductCard(onClick = {}, id = 5)
-            ProductCard(onClick = {}, id = 7)
+            ProductCard(onClick = {}, id = 200)
         }
     }
 }

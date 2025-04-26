@@ -85,6 +85,7 @@ fun ProductCard(
             // передаем название товара
             when (productState) {
                 is ProductState.Loading -> { CircularProgressIndicator() }
+
                 is ProductState.Error ->
                     Text (
                         text = "Error",

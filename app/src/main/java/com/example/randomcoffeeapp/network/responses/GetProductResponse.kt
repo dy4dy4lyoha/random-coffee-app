@@ -21,6 +21,6 @@ data class Category(
 )
 
 data class Price(
-    val value: Int,
+    val value: Double,
     val currency: String,
 )
