@@ -17,6 +17,7 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -43,19 +44,14 @@ import java.io.IOException
 fun ProductCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    productViewModel: ProductViewModel = viewModel(),
     id: Int,
     ) {
 
+    val productViewModel: ProductViewModel = viewModel()
     val productState by productViewModel.productState.collectAsState()
 
     LaunchedEffect(key1 = id) {
-        try {
-            productViewModel.getProduct(id)
-        } catch (e: IOException) {
-            productViewModel.setProductState(ProductState.Error)
-            Log.e("product", "Error $id", e)
-        }
+        productViewModel.getProduct(id)
     }
 
     // карточка товара
@@ -88,13 +84,7 @@ fun ProductCard(
             }
             // передаем название товара
             when (productState) {
-                is ProductState.Loading ->
-                    Text(
-                        text = "Loading",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontSize = 24.sp,
-                        modifier = Modifier.padding(8.dp)
-                    )
+                is ProductState.Loading -> { CircularProgressIndicator() }
                 is ProductState.Error ->
                     Text (
                         text = "Error",
@@ -104,7 +94,7 @@ fun ProductCard(
                     )
                 is ProductState.Success -> {
                     Text(
-                        text = (productState as ProductState.Success).product.name,
+                        text = (productState as ProductState.Success).product.name ?: "Unknown",
                         style = MaterialTheme.typography.bodyMedium,
                         fontSize = 24.sp,
                         modifier = Modifier.padding(8.dp)

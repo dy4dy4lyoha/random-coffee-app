@@ -14,8 +14,8 @@ interface CoffeeShopApi {
     @GET("v1/products")
     suspend fun getProducts() : GetProductResponse // getting the all products
 
-    @GET("api/v1/products/{product_id}")
-    suspend fun getProduct(@Path("product_id") productId: Int): Product
+    @GET("api/v1/products/{id}")
+    suspend fun getProduct(@Path("id") id: Int): Product
 
 }
 
