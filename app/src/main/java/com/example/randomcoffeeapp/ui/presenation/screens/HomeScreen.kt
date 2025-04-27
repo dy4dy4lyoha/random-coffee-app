@@ -30,23 +30,27 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
 
     val allProductsState by allProductsViewModel.allProductsState.collectAsState()
 
-    ProductCard(product = Product(1, "type", "zz", category = Category(1, "z"), prices = listOf(Price(255.5, "$"))))
+    ProductCard(
+        product = Product(
+            1,
+            "type",
+            "zz",
+            category = Category(1, "z"),
+            prices = listOf(Price(255.5, "$"))
+        )
+    )
 
     when (allProductsState) {
         is AllProductsState.Loading -> {
             CircularProgressIndicator()
         }
-
         is AllProductsState.Success -> {
             val products = (allProductsState as AllProductsState.Success).products
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 contentPadding = PaddingValues(8.dp)
             ) {
-                items(
-                    items = products,
-                    key = {product -> product.id}
-                ) { product ->
+                items(products) { product ->
                     ProductCard(product = product)
                 }
             }
