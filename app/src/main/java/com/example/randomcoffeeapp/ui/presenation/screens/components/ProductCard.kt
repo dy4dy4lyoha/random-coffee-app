@@ -1,6 +1,7 @@
 
 package com.example.randomcoffeeapp.ui.presenation.screens.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,13 +38,11 @@ import com.example.randomcoffeeapp.network.responses.Product
 @Composable
 fun ProductCard(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
     product: Product
     ) {
 
     var showQuantityButtons by remember { mutableStateOf(false) }
-    var countOfProduct by remember { mutableStateOf(0) }
-
+    var countOfProduct by remember { mutableStateOf(1) }
 
     // product card
     Card(
@@ -51,6 +50,7 @@ fun ProductCard(
         modifier = Modifier
             .padding(8.dp)
             .size(width = 180.dp, height = 240.dp)
+            .clickable {  }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -79,24 +79,27 @@ fun ProductCard(
                 modifier = Modifier
                     .padding(bottom = 8.dp)
             ) {
-                if (product.prices.isNotEmpty()) {
-                    Text(
-                        text = "${product.prices[0].value} ${product.prices[0].currency}",
-                        fontSize = 24.sp
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(64.dp))
-
                 // button for add product in basket
-                if (showQuantityButtons) {
+                if (showQuantityButtons && countOfProduct > 0) {
                     QuantityButtons(
                         count = countOfProduct,
-                        onIncrement = {countOfProduct++},
+                        onIncrement = {if(countOfProduct < 10) countOfProduct++},
                         onDecrement = {if(countOfProduct > 0) countOfProduct--},
                     )
                 } else {
-                    AddToBasketButton (onClick = {showQuantityButtons = true})
+                    if (product.prices.isNotEmpty()) {
+                        Text(
+                            text = "${product.prices[0].value} ${product.prices[0].currency}",
+                            fontSize = 24.sp
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(10.dp))
+                    AddToBasketButton (
+                        onClick = {
+                            showQuantityButtons = true
+                            countOfProduct = 1
+                        }
+                    )
                 }
             }
         }

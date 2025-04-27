@@ -1,6 +1,7 @@
 package com.example.randomcoffeeapp.ui.presenation.models
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.randomcoffeeapp.network.CoffeeApi
@@ -24,8 +25,8 @@ sealed class AllProductsState {
 }
 
 class ProductViewModel() : ViewModel() {
-    private val _productState = MutableStateFlow<ProductState>(ProductState.Loading)
-    val productState: StateFlow<ProductState> = _productState
+//    private val _productState = MutableStateFlow<ProductState>(ProductState.Loading)
+//    val productState: StateFlow<ProductState> = _productState
 
     private val _allProductsState = MutableStateFlow<AllProductsState>(AllProductsState.Loading)
     val allProductsState: StateFlow<AllProductsState> = _allProductsState
@@ -33,8 +34,6 @@ class ProductViewModel() : ViewModel() {
     init {
         getAllProducts()
     }
-
-
 
     fun getAllProducts() {
         viewModelScope.launch {

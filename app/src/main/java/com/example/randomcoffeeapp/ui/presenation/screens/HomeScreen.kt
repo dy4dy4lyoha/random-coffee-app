@@ -1,5 +1,6 @@
 package com.example.randomcoffeeapp.ui.presenation.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.randomcoffeeapp.network.responses.Category
+import com.example.randomcoffeeapp.network.responses.Price
+import com.example.randomcoffeeapp.network.responses.Product
 import com.example.randomcoffeeapp.ui.presenation.models.AllProductsState
 import com.example.randomcoffeeapp.ui.presenation.models.ProductViewModel
 import com.example.randomcoffeeapp.ui.presenation.screens.components.ProductCard
@@ -26,10 +30,13 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
 
     val allProductsState by allProductsViewModel.allProductsState.collectAsState()
 
+    ProductCard(product = Product(1, "type", "zz", category = Category(1, "z"), prices = listOf(Price(255.5, "$"))))
+
     when (allProductsState) {
         is AllProductsState.Loading -> {
             CircularProgressIndicator()
         }
+
         is AllProductsState.Success -> {
             val products = (allProductsState as AllProductsState.Success).products
             LazyVerticalGrid(
@@ -40,7 +47,7 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
                     items = products,
                     key = {product -> product.id}
                 ) { product ->
-                    ProductCard(product = product, onClick = {})
+                    ProductCard(product = product)
                 }
             }
         }
