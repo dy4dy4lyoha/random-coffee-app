@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.randomcoffeeapp.ui.presenation.models.AllProductsState
 import com.example.randomcoffeeapp.ui.presenation.models.ProductViewModel
 import com.example.randomcoffeeapp.ui.presenation.screens.components.BasketButton
+import com.example.randomcoffeeapp.ui.presenation.screens.components.BasketButtonPreview
 import com.example.randomcoffeeapp.ui.presenation.screens.components.ProductCard
 import com.example.randomcoffeeapp.ui.theme.RandomCoffeeAppTheme
 
@@ -30,20 +30,7 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
 
     val allProductsState by allProductsViewModel.allProductsState.collectAsState()
 
-//    ProductCard(
-//        product = Product(
-//            1,
-//            "type",
-//            "zz",
-//            category = Category(1, "z"),
-//            prices = listOf(Price(255.5, "$"))
-//        )
-//    )
-
     Column {
-        /// header
-        /// grid
-
         when (allProductsState) {
             is AllProductsState.Loading -> {
                 CircularProgressIndicator()
@@ -65,12 +52,9 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
             }
         }
 
-
-        Row(modifier = Modifier.align(Alignment.End)) {
-            BasketButton()
-        }
     }
-    BasketBottomSheet()
+
+//    BasketButton()
 }
 
 @Preview(showBackground = true)

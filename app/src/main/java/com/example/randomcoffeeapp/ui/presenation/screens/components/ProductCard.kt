@@ -94,7 +94,7 @@ fun ProductCard(
                     if (product.prices.isNotEmpty()) {
                         Text(
                             text = "${product.prices[0].value} ${product.prices[0].currency}",
-                            fontSize = 24.sp,
+                            fontSize = 22.sp,
                             fontFamily = openSansFamily,
                             fontWeight = FontWeight.Bold,
                         )

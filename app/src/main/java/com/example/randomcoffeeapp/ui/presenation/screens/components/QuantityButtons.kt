@@ -32,13 +32,13 @@ import com.example.randomcoffeeapp.ui.theme.openSansFamily
 fun AddToBasketButton(onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        contentPadding = PaddingValues(8.dp),
+        contentPadding = PaddingValues(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF269DD1)
         ),
         modifier = Modifier
             .clip(CircleShape)
-            .size(40.dp)
+            .size(36.dp)
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_add),
@@ -59,14 +59,14 @@ fun QuantityButtons(count: Int, onIncrement: () -> Unit, onDecrement: () -> Unit
 
         // button -1
         Button(
-            contentPadding = PaddingValues(10.dp),
+            contentPadding = PaddingValues(12.dp),
             onClick = onDecrement,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFD9D9D9)
             ),
             modifier = Modifier
                 .clip(CircleShape)
-                .size(40.dp)
+                .size(36.dp)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_remove),
@@ -92,13 +92,13 @@ fun QuantityButtons(count: Int, onIncrement: () -> Unit, onDecrement: () -> Unit
         // button +1
         Button(
             onClick = onIncrement,
-            contentPadding = PaddingValues(10.dp),
+            contentPadding = PaddingValues(12.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFD9D9D9)
             ),
             modifier = Modifier
                 .clip(CircleShape)
-                .size(40.dp)
+                .size(36.dp)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_add),
