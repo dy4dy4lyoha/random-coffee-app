@@ -9,7 +9,6 @@ import androidx.compose.material3.Surface
 import com.example.randomcoffeeapp.ui.presenation.screens.HomeScreen
 import com.example.randomcoffeeapp.ui.theme.RandomCoffeeAppTheme
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

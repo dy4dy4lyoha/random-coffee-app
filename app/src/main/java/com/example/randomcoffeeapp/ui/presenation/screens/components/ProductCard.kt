@@ -32,8 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.randomcoffeeapp.R
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
 import com.example.randomcoffeeapp.network.responses.Product
+import com.example.randomcoffeeapp.ui.theme.openSansFamily
 
 @Composable
 fun ProductCard(
@@ -70,6 +72,8 @@ fun ProductCard(
             Text(
                 text = product.name,
                 style = MaterialTheme.typography.bodyMedium,
+                fontFamily = openSansFamily,
+                fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
                 modifier = Modifier.padding(8.dp)
             )
@@ -90,7 +94,9 @@ fun ProductCard(
                     if (product.prices.isNotEmpty()) {
                         Text(
                             text = "${product.prices[0].value} ${product.prices[0].currency}",
-                            fontSize = 24.sp
+                            fontSize = 24.sp,
+                            fontFamily = openSansFamily,
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                     Spacer(modifier = Modifier.width(10.dp))
