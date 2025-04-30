@@ -3,6 +3,7 @@ package com.example.randomcoffeeapp.ui.presenation.models
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.randomcoffeeapp.network.CoffeeApi
+import com.example.randomcoffeeapp.network.responses.Category
 import com.example.randomcoffeeapp.network.responses.Product
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,11 +40,13 @@ class ProductViewModel() : ViewModel() {
             try {
                 val products = CoffeeApi.coffeeShopApi.getProducts()
                 _allProductsState.value = AllProductsState.Success(products.data)
+
             } catch (e: Exception) {
                 _allProductsState.value = AllProductsState.Error
             }
         }
     }
+
     // getting the only one product by id
     fun getProduct(productId: Int) {
         viewModelScope.launch {

@@ -29,9 +29,12 @@ import com.example.randomcoffeeapp.ui.theme.openSansFamily
 
 // button "add"
 @Composable
-fun AddToBasketButton(onClick: () -> Unit) {
+fun AddToBasketButton(
+    onAdd: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Button(
-        onClick = onClick,
+        onClick = onAdd,
         contentPadding = PaddingValues(12.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF269DD1)
@@ -54,8 +57,7 @@ fun AddToBasketButton(onClick: () -> Unit) {
 @Composable
 fun QuantityButtons(count: Int, onIncrement: () -> Unit, onDecrement: () -> Unit) {
     Row (
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween) {
+        verticalAlignment = Alignment.CenterVertically) {
 
         // button -1
         Button(
@@ -84,7 +86,6 @@ fun QuantityButtons(count: Int, onIncrement: () -> Unit, onDecrement: () -> Unit
             fontSize = 20.sp,
             style = MaterialTheme.typography.bodyMedium,
             fontFamily = openSansFamily,
-            fontWeight = FontWeight.Bold,
         )
 
         Spacer(modifier = Modifier.width(20.dp))

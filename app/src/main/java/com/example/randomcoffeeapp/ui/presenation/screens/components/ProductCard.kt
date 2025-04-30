@@ -3,11 +3,13 @@ package com.example.randomcoffeeapp.ui.presenation.screens.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,17 +37,22 @@ import com.example.randomcoffeeapp.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
+import com.example.randomcoffeeapp.network.responses.Price
 import com.example.randomcoffeeapp.network.responses.Product
 import com.example.randomcoffeeapp.ui.theme.openSansFamily
 
 @Composable
 fun ProductCard(
     modifier: Modifier = Modifier,
-    product: Product
+    product: Product,
+    onAddToBasket: (Product) -> Unit,
+    onDecreaseProduct: (Product) -> Unit,
+    onIncreaseProduct: (Product) -> Unit,
+    productMap: MutableState<MutableMap<Product, Int>>
     ) {
 
-    var showQuantityButtons by remember { mutableStateOf(false) }
-    var countOfProduct by remember { mutableStateOf(1) }
+    val countOfProduct = productMap.value[product] ?: 0
+    val showQuantityButtons = productMap.value.containsKey(product)
 
     // product card
     Card(
@@ -52,7 +60,7 @@ fun ProductCard(
         modifier = Modifier
             .padding(8.dp)
             .size(width = 180.dp, height = 240.dp)
-            .clickable {  }
+            .clickable {}
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,38 +81,64 @@ fun ProductCard(
                 text = product.name,
                 style = MaterialTheme.typography.bodyMedium,
                 fontFamily = openSansFamily,
-                fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
                 modifier = Modifier.padding(8.dp)
             )
+            // row with text and buttons
             Row (
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .padding(bottom = 8.dp)
+                    .padding(10.dp)
+                    .fillMaxWidth()
             ) {
                 // button for add product in basket
                 if (showQuantityButtons && countOfProduct > 0) {
-                    QuantityButtons(
-                        count = countOfProduct,
-                        onIncrement = {if(countOfProduct < 10) countOfProduct++},
-                        onDecrement = {if(countOfProduct > 0) countOfProduct--},
-                    )
-                } else {
-                    if (product.prices.isNotEmpty()) {
-                        Text(
-                            text = "${product.prices[0].value} ${product.prices[0].currency}",
-                            fontSize = 22.sp,
-                            fontFamily = openSansFamily,
-                            fontWeight = FontWeight.Bold,
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        QuantityButtons(
+                            count = countOfProduct,
+                            onIncrement = {
+                                    if (countOfProduct < 10) {
+                                        productMap.value = productMap.value.toMutableMap().apply {
+                                        val currentCount = getOrDefault(product, 0)
+                                            put(product, currentCount + 1)
+                                    }
+                                }
+                            },
+                            onDecrement = {
+                                if (countOfProduct > 0) {
+                                    productMap.value = productMap.value.toMutableMap().apply {
+                                        val currentCount = getOrDefault(product, 0)
+                                        if (currentCount > 1) {
+                                            put(product, currentCount - 1)
+                                        } else {
+                                            remove(product)
+                                        }
+                                    }
+                                }
+                            },
                         )
                     }
-                    Spacer(modifier = Modifier.width(10.dp))
+                } else {
+                    // showing price and formating his
+                    if (product.prices.isNotEmpty()) {
+                        Text(
+                            text = if(product.prices[0].currency == "RUB") {
+                                val amountInt = product.prices[0].value.toInt()
+                                "$amountInt₽"
+                            } else {
+                                "${product.prices[0].value} ${product.prices[0].currency}"
+                            },
+                            fontSize = 22.sp,
+                            fontFamily = openSansFamily,
+                        )
+                    }
                     AddToBasketButton (
-                        onClick = {
-                            showQuantityButtons = true
-                            countOfProduct = 1
-                        }
+                        onAdd = { onAddToBasket(product) }
                     )
                 }
             }
