@@ -5,42 +5,33 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.motionEventSpy
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,7 +40,6 @@ import com.example.randomcoffeeapp.R
 import com.example.randomcoffeeapp.network.responses.Product
 import com.example.randomcoffeeapp.ui.presenation.models.OrderCreationState
 import com.example.randomcoffeeapp.ui.presenation.models.ProductViewModel
-import com.example.randomcoffeeapp.ui.theme.RandomCoffeeAppTheme
 import com.example.randomcoffeeapp.ui.theme.openSansFamily
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -81,10 +71,10 @@ fun BasketBottomSheet(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
+                .padding(dimensionResource(R.dimen.small_padding))
         ) {
             Text(
-                text = "Ваш заказ",
+                text = stringResource(R.string.your_order),
                 fontSize = 30.sp,
                 style = MaterialTheme.typography.bodyMedium,
                 fontFamily = openSansFamily,
@@ -99,7 +89,7 @@ fun BasketBottomSheet(
                     painter = painterResource(R.drawable.ic_delete_all),
                     contentDescription = null,
                     modifier = Modifier
-                        .size(30.dp)
+                        .size(dimensionResource(R.dimen.medium_icon))
             ) }
 
         }
@@ -112,7 +102,7 @@ fun BasketBottomSheet(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp)
+                    .padding(dimensionResource(R.dimen.medium_padding))
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -122,14 +112,14 @@ fun BasketBottomSheet(
                         model = product.imageUrl,
                         contentDescription = null,
                         modifier = Modifier
-                            .size(55.dp)
+                            .size(dimensionResource(R.dimen.small_image))
                     )
                     // name of product
                     Text(
                         text = product.name,
                         fontSize = 22.sp,
                         fontFamily = openSansFamily,
-                        modifier = Modifier.padding(start = 10.dp)
+                        modifier = Modifier.padding(start = dimensionResource(R.dimen.medium_padding))
                     )
                     // count of product
                     Text(
@@ -137,7 +127,7 @@ fun BasketBottomSheet(
                         fontSize = 22.sp,
                         fontFamily = openSansFamily,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(start = 10.dp)
+                        modifier = Modifier.padding(start = dimensionResource(R.dimen.medium_padding))
                     )
                 }
 
@@ -155,15 +145,15 @@ fun BasketBottomSheet(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp)
+                .padding(dimensionResource(R.dimen.medium_padding))
         ) {
             Text(
-                text = "Итого",
+                text = stringResource(R.string.total_price),
                 fontSize = 22.sp,
                 fontFamily = openSansFamily,
             )
             Text(
-                text = totalPrice.toString(),
+                text = "${totalPrice.toInt()}₽",
                 fontSize = 22.sp,
                 fontFamily = openSansFamily,
             )
@@ -175,19 +165,16 @@ fun BasketBottomSheet(
                 val token = "<FCM Registration Token>"
                 productViewModel.createOrder(positions, token)
             },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF269DD1)
-            ),
+            colors = ButtonDefaults.buttonColors(colorResource(R.color.primary_button)),
             modifier = Modifier
-                .padding(32.dp)
+                .padding(dimensionResource(R.dimen.large_padding))
                 .fillMaxWidth()
-
         ) {
             Text(
-                text = "Оформить заказ"
+                text = stringResource(R.string.create_order)
             )
         }
-        Box() {
+        Box{
             SnackbarHost(
                 hostState = snackBarHostState,
                 modifier = Modifier
@@ -213,13 +200,5 @@ fun BasketBottomSheet(
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun BasketBottomSheet() {
-    RandomCoffeeAppTheme {
-        BasketBottomSheet()
     }
 }

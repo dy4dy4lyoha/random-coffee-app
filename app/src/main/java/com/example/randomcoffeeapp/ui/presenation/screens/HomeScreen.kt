@@ -30,8 +30,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,7 +59,6 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
     var productMap: MutableState<MutableMap<Product, Int>> = remember { mutableStateOf(mutableMapOf()) }
 
     var selectedProduct by remember { mutableStateOf<Product?>(null) }
-    var selectedCategory by remember { mutableStateOf<String?>(null) }
 
     // add product to basket
     val addToBasket:(Product) -> Unit = { product ->
@@ -103,7 +104,7 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
                     is AllProductsState.Loading -> {
                         CircularProgressIndicator(
                             modifier = Modifier
-                                .size(50.dp)
+                                .size(dimensionResource(R.dimen.large_icon))
                                 .align(Alignment.Center)
                         )
                     }
@@ -121,10 +122,20 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
                                         text = categorySlug,
                                         fontSize = 36.sp,
                                         fontFamily = openSansFamily,
+                                        modifier = Modifier
+                                            .padding(
+                                                start = dimensionResource(R.dimen.small_padding),
+                                                top = dimensionResource(R.dimen.large_padding),
+                                                bottom = dimensionResource(R.dimen.large_padding)
+                                            )
                                     )
                                 }
                                 item {
-                                    FlowRow {
+                                    FlowRow (
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                    ) {
                                         productsInCategory.forEach { product ->
                                             ProductCard(
                                                 product = product,
@@ -141,7 +152,7 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
                         }
                     }
                     is AllProductsState.Error -> {
-                        Text(text = "Error")
+                        Text(text = stringResource(R.string.error))
                     }
                 }
                 // basket button
@@ -157,15 +168,16 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
                                 }
                             }
                         },
-                        contentPadding = PaddingValues(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF269DD1)
-                        ),
-                        shape = RoundedCornerShape(8.dp),
+                        contentPadding = PaddingValues(dimensionResource(R.dimen.small_padding)),
+                        colors = ButtonDefaults.buttonColors(colorResource(R.color.primary_button)),
+                        shape = RoundedCornerShape(dimensionResource(R.dimen.small_corner_shape)),
                         modifier = Modifier
-                            .size(width = 100.dp, height = 60.dp)
+                            .size(
+                                width = dimensionResource(R.dimen.width_basket_button),
+                                height = dimensionResource(R.dimen.height_basket_button),
+                            )
                             .align(Alignment.BottomEnd)
-                            .padding(8.dp)
+                            .padding(dimensionResource(R.dimen.small_padding))
                     ) {
                         Row (
                             verticalAlignment = Alignment.CenterVertically,
@@ -173,6 +185,8 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_cart),
                                 contentDescription = null,
+                                modifier = Modifier
+                                    .size(dimensionResource(R.dimen.small_icon))
                             )
                             Text(
                                 text = "${totalPrice.toInt()}₽"

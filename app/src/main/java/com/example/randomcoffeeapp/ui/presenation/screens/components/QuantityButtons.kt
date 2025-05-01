@@ -1,6 +1,5 @@
 package com.example.randomcoffeeapp.ui.presenation.screens.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,13 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.randomcoffeeapp.R
-import com.example.randomcoffeeapp.ui.theme.RandomCoffeeAppTheme
 import com.example.randomcoffeeapp.ui.theme.openSansFamily
 
 // button "add"
@@ -35,13 +32,13 @@ fun AddToBasketButton(
 ) {
     Button(
         onClick = onAdd,
-        contentPadding = PaddingValues(12.dp),
+        contentPadding = PaddingValues(dimensionResource(R.dimen.small_padding)),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF269DD1)
+            containerColor = colorResource(R.color.primary_button)
         ),
         modifier = Modifier
             .clip(CircleShape)
-            .size(36.dp)
+            .size(dimensionResource(R.dimen.medium_button))
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_add),
@@ -61,25 +58,25 @@ fun QuantityButtons(count: Int, onIncrement: () -> Unit, onDecrement: () -> Unit
 
         // button -1
         Button(
-            contentPadding = PaddingValues(12.dp),
+            contentPadding = PaddingValues(dimensionResource(R.dimen.small_padding)),
             onClick = onDecrement,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFD9D9D9)
+                containerColor = colorResource(R.color.neutral_button)
             ),
             modifier = Modifier
                 .clip(CircleShape)
-                .size(36.dp)
+                .size(dimensionResource(R.dimen.medium_button))
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_remove),
                 contentDescription = null,
-                tint = Color(0xFF484647),
+                tint = colorResource(R.color.neutral_icon),
                 modifier = Modifier
                     .fillMaxSize()
             )
         }
 
-        Spacer(modifier = Modifier.width(20.dp))
+        Spacer(modifier = Modifier.width(dimensionResource(R.dimen.medium_spacer)))
 
         Text(
             text = count.toString(),
@@ -88,23 +85,23 @@ fun QuantityButtons(count: Int, onIncrement: () -> Unit, onDecrement: () -> Unit
             fontFamily = openSansFamily,
         )
 
-        Spacer(modifier = Modifier.width(20.dp))
+        Spacer(modifier = Modifier.width(dimensionResource(R.dimen.medium_spacer)))
 
         // button +1
         Button(
             onClick = onIncrement,
-            contentPadding = PaddingValues(12.dp),
+            contentPadding = PaddingValues(dimensionResource(R.dimen.small_padding)),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFD9D9D9)
+                containerColor = colorResource(R.color.neutral_button)
             ),
             modifier = Modifier
                 .clip(CircleShape)
-                .size(36.dp)
+                .size(dimensionResource(R.dimen.medium_button))
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_add),
                 contentDescription = null,
-                tint = Color(0xFF484647),
+                tint = colorResource(R.color.neutral_icon),
                 modifier = Modifier
                     .fillMaxSize()
             )
