@@ -30,8 +30,6 @@ import com.example.randomcoffeeapp.ui.theme.openSansFamily
 fun ProductCard(
     product: Product,
     onAddToBasket: (Product) -> Unit,
-    onDecreaseProduct: (Product) -> Unit,
-    onIncreaseProduct: (Product) -> Unit,
     onNavigate: (Product?) -> Unit,
     productMap: MutableState<MutableMap<Product, Int>>,
     ) {

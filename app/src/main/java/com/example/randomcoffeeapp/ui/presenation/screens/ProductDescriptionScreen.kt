@@ -29,7 +29,6 @@ fun ProductDescriptionScreen(
     product: Product,
     onBackClick: () -> Unit
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxSize()
