@@ -1,22 +1,25 @@
 package com.example.randomcoffeeapp.network
 
+import com.example.randomcoffeeapp.network.responses.CreateOrderResponse
+import com.example.randomcoffeeapp.network.responses.Order
 import com.example.randomcoffeeapp.network.responses.Product
 import com.example.randomcoffeeapp.network.responses.ProductResponse
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.POST
 
 interface CoffeeShopApi {
     @GET("v1/products")
     suspend fun getProducts() : ProductResponse // getting the all products
 
-    @GET("v1/products/{id}")
-    suspend fun getProduct(@Path("id") id: Int): Product // getting the only one product by id
-
+    @POST("v1/orders")
+    suspend fun createOrder(@Body order: Order) : CreateOrderResponse // create order
 }
 
 // Client
@@ -44,6 +47,7 @@ object CoffeeApi {
             .create(CoffeeShopApi::class.java)
     }
 }
+
 
 
 

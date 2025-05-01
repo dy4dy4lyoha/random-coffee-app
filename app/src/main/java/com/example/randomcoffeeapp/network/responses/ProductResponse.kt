@@ -6,6 +6,11 @@ data class ProductResponse(
     val data: List<Product>
 )
 
+data class CreateOrderResponse(
+    val orderId: String,
+    val success: Boolean,
+)
+
 data class Product(
     val id: Int,
     val name: String,
@@ -24,3 +29,8 @@ data class Price(
     val value: Double,
     val currency: String,
     )
+
+data class Order(
+    val positions: Map<String, Int>,
+    val token: String,
+)
