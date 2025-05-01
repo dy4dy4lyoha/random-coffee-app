@@ -83,6 +83,7 @@ fun QuantityButtons(count: Int, onIncrement: () -> Unit, onDecrement: () -> Unit
             fontSize = 20.sp,
             style = MaterialTheme.typography.bodyMedium,
             fontFamily = openSansFamily,
+            color = Color.Black,
         )
 
         Spacer(modifier = Modifier.width(dimensionResource(R.dimen.medium_spacer)))

@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.sp
@@ -70,6 +71,7 @@ fun ProductCard(
                 style = MaterialTheme.typography.bodyMedium,
                 fontFamily = openSansFamily,
                 fontSize = 24.sp,
+                color = Color.Black,
                 modifier = Modifier.padding(dimensionResource(R.dimen.small_padding))
             )
             // row with text and buttons
