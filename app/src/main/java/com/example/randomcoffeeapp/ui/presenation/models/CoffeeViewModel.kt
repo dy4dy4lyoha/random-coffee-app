@@ -3,26 +3,11 @@ package com.example.randomcoffeeapp.ui.presenation.models
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.randomcoffeeapp.network.CoffeeApi
-import com.example.randomcoffeeapp.network.responses.CreateOrderResponse
 import com.example.randomcoffeeapp.network.responses.Order
 import com.example.randomcoffeeapp.network.responses.Product
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.suspendCancellableCoroutine
-import retrofit2.Retrofit
-import retrofit2.awaitResponse
-import kotlin.coroutines.resumeWithException
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.POST
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 // class for getting the all products
 sealed class AllProductsState {
