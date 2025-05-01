@@ -21,7 +21,7 @@
     
     <dimen name="small_corner_shape">8.dp</dimen>
 
-    <dimen name="width_product_card">180.dp</dimen>
+    <dimen name="width_product_card">160.dp</dimen>
     <dimen name="height_product_card">240.dp</dimen>
 
 </resources>
