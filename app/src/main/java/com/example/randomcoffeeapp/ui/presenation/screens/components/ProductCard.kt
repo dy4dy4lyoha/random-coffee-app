@@ -1,65 +1,54 @@
 
 package com.example.randomcoffeeapp.ui.presenation.screens.components
 
-import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.randomcoffeeapp.R
-import com.example.randomcoffeeapp.ui.presenation.models.ProductViewModel
-import com.example.randomcoffeeapp.ui.theme.RandomCoffeeAppTheme
-import androidx.compose.runtime.*
-import androidx.compose.ui.graphics.Color
-import com.example.randomcoffeeapp.ui.presenation.models.ProductState
+import androidx.compose.ui.text.font.FontWeight
 import coil.compose.AsyncImage
-import java.io.IOException
+import com.example.randomcoffeeapp.network.responses.Product
+import com.example.randomcoffeeapp.ui.theme.openSansFamily
 
 @Composable
 fun ProductCard(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    id: Int,
+    product: Product,
+    onAddToBasket: (Product) -> Unit,
+    onNavigate: (Product?) -> Unit,
+    productMap: MutableState<MutableMap<Product, Int>>,
     ) {
 
-    val productViewModel: ProductViewModel = viewModel()
-    val productState by productViewModel.productState.collectAsState()
+    val countOfProduct = productMap.value[product] ?: 0
+    val showQuantityButtons = productMap.value.containsKey(product)
 
-    LaunchedEffect(key1 = id) {
-        productViewModel.getProduct(id)
-    }
-
-    // карточка товара
+    // product card
     Card(
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onPrimary),
+        colors = CardDefaults.cardColors(colorResource(R.color.background_card)),
         modifier = Modifier
-            .padding(8.dp)
-            .size(width = 180.dp, height = 240.dp)
+            .padding(dimensionResource(R.dimen.small_padding))
+            .size(
+                width = dimensionResource(R.dimen.width_product_card),
+                height = dimensionResource(R.dimen.height_product_card)
+            )
+            .clickable {
+                onNavigate(product)
+            }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -67,77 +56,81 @@ fun ProductCard(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            // передаем изображение
-            when (productState) {
-                is ProductState.Success -> {
-                    AsyncImage(
-                        model = (productState as ProductState.Success).product.imageUrl,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(100.dp)
-                            .padding(top = 8.dp)
-                    )
-                }
-                else -> {
-                    Spacer (modifier = Modifier.size(100.dp))
-                }
-            }
-            // передаем название товара
-            when (productState) {
-                is ProductState.Loading -> { CircularProgressIndicator() }
-                is ProductState.Error ->
-                    Text (
-                        text = "Error",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontSize = 24.sp,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                is ProductState.Success -> {
-                    Text(
-                        text = (productState as ProductState.Success).product.name ?: "Unknown",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontSize = 24.sp,
-                        modifier = Modifier.padding(8.dp)
-                    )
-                }
-            }
+            // image of product
+            AsyncImage(
+                model = product.imageUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(dimensionResource(R.dimen.medium_image))
+                    .padding(top = dimensionResource(R.dimen.small_padding))
+            )
+            // name of product
+            Text(
+                text = product.name,
+                style = MaterialTheme.typography.bodyMedium,
+                fontFamily = openSansFamily,
+                fontSize = 24.sp,
+                modifier = Modifier.padding(dimensionResource(R.dimen.small_padding))
+            )
+            // row with text and buttons
             Row (
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .padding(bottom = 8.dp)
+                    .padding(dimensionResource(R.dimen.small_padding))
+                    .fillMaxWidth()
             ) {
-                Text(
-                    text = "245p",
-                    fontSize = 24.sp,
-                )
-                Spacer(modifier = Modifier.width(64.dp))
-                // кнопка добавления товара в корзину
-                Button(
-                    onClick = onClick,
-                    contentPadding = PaddingValues(0.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF269DD1)),
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(40.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_add_icon),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
+                // button for add product in basket
+                if (showQuantityButtons && countOfProduct > 0) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        QuantityButtons(
+                            count = countOfProduct,
+                            onIncrement = {
+                                    if (countOfProduct < 10) {
+                                        productMap.value = productMap.value.toMutableMap().apply {
+                                        val currentCount = getOrDefault(product, 0)
+                                            put(product, currentCount + 1)
+                                    }
+                                }
+                            },
+                            onDecrement = {
+                                if (countOfProduct > 0) {
+                                    productMap.value = productMap.value.toMutableMap().apply {
+                                        val currentCount = getOrDefault(product, 0)
+                                        if (currentCount > 1) {
+                                            put(product, currentCount - 1)
+                                        } else {
+                                            remove(product)
+                                        }
+                                    }
+                                }
+                            },
+                        )
+                    }
+                } else {
+                    // showing price and formating his
+                    if (product.prices.isNotEmpty()) {
+                        Text(
+                            text = if(product.prices[0].currency == "RUB") {
+                                val amountInt = product.prices[0].value.toInt()
+                                "$amountInt₽"
+                            } else {
+                                "${product.prices[0].value} ${product.prices[0].currency}"
+                            },
+                            fontSize = 22.sp,
+                            fontFamily = openSansFamily,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                    AddToBasketButton (
+                        onAdd = { onAddToBasket(product) }
                     )
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun ProductCardPreview() {
-    RandomCoffeeAppTheme {
-        ProductCard(onClick = {}, id = 1)
     }
 }

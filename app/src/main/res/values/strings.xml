@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">RandomCoffeeApp</string>
 
-    <string name="latte">Latte</string>
+    <string name="your_order">Ваш заказ</string>
+    <string name="create_order">Оформить заказ</string>
+    <string name="success_order">Заказ успешно создан</string>
+    <string name="error">Возникла ошибка</string>
+    <string name="total_price">Итого</string>
 </resources>
