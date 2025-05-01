@@ -3,16 +3,14 @@ package com.example.randomcoffeeapp.ui.presenation.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -20,17 +18,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -40,29 +34,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.randomcoffeeapp.R
-import com.example.randomcoffeeapp.network.responses.Category
-import com.example.randomcoffeeapp.network.responses.Price
 import com.example.randomcoffeeapp.network.responses.Product
 import com.example.randomcoffeeapp.ui.presenation.models.AllProductsState
 import com.example.randomcoffeeapp.ui.presenation.models.ProductViewModel
 import com.example.randomcoffeeapp.ui.presenation.screens.components.ProductCard
 import com.example.randomcoffeeapp.ui.theme.RandomCoffeeAppTheme
+import com.example.randomcoffeeapp.ui.theme.openSansFamily
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
-
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
 
     val allProductsState by allProductsViewModel.allProductsState.collectAsState()
+
     val scope = rememberCoroutineScope()
     val sheetState = rememberModalBottomSheetState()
 
     var productMap: MutableState<MutableMap<Product, Int>> = remember { mutableStateOf(mutableMapOf()) }
+
+    var selectedProduct by remember { mutableStateOf<Product?>(null) }
+    var selectedCategory by remember { mutableStateOf<String?>(null) }
 
     // add product to basket
     val addToBasket:(Product) -> Unit = { product ->
@@ -91,75 +86,103 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
         }
     }
 
-    Box (modifier = Modifier.fillMaxSize()) {
-        when (allProductsState) {
-            is AllProductsState.Loading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .align(Alignment.Center)
-                )
-            }
+    // navigation on product
+    val handleNavigation: (Product?) -> Unit = { product ->
+        selectedProduct = product
+    }
 
-            // grid from products
-            is AllProductsState.Success -> {
-                val products = (allProductsState as AllProductsState.Success).products
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(8.dp)
-                ) {
-                    items(products) { products ->
-                        ProductCard(
-                            product = products,
-                            productMap = productMap,
-                            onAddToBasket = addToBasket,
-                            onIncreaseProduct = addToBasket,
-                            onDecreaseProduct = {},
+    Box (modifier = Modifier.fillMaxSize()) {
+        if (selectedProduct != null) {
+            ProductDescriptionScreen(
+                product = selectedProduct!!,
+                onBackClick = { handleNavigation(null) }
+            )
+        } else {
+            Box(modifier = Modifier.fillMaxSize()) {
+                when (allProductsState) {
+                    is AllProductsState.Loading -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(50.dp)
+                                .align(Alignment.Center)
                         )
                     }
+
+                    // grid from products
+                    is AllProductsState.Success -> {
+                        val products = (allProductsState as AllProductsState.Success).products
+
+                        val groupedProducts: Map<String, List<Product>> =
+                            products.groupBy { it.category?.slug ?: "None" }
+                        LazyColumn {
+                            groupedProducts.forEach { (categorySlug, productsInCategory) ->
+                                item {
+                                    Text(
+                                        text = categorySlug,
+                                        fontSize = 36.sp,
+                                        fontFamily = openSansFamily,
+                                    )
+                                }
+                                item {
+                                    FlowRow {
+                                        productsInCategory.forEach { product ->
+                                            ProductCard(
+                                                product = product,
+                                                productMap = productMap,
+                                                onAddToBasket = addToBasket,
+                                                onIncreaseProduct = addToBasket,
+                                                onDecreaseProduct = {},
+                                                onNavigate = handleNavigation,
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    is AllProductsState.Error -> {
+                        Text(text = "Error")
+                    }
                 }
-            }
-            is AllProductsState.Error -> {
-                Text(text = "Error")
+                // basket button
+                // idk why the button does not work through import, so I did it here
+                if (productMap.value.isNotEmpty()) {
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                if (sheetState.isVisible) {
+                                    sheetState.hide()
+                                } else {
+                                    sheetState.show()
+                                }
+                            }
+                        },
+                        contentPadding = PaddingValues(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF269DD1)
+                        ),
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier
+                            .size(width = 100.dp, height = 60.dp)
+                            .align(Alignment.BottomEnd)
+                            .padding(8.dp)
+                    ) {
+                        Row (
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_cart),
+                                contentDescription = null,
+                            )
+                            Text(
+                                text = "${totalPrice.toInt()}₽"
+                            )
+                        }
+                    }
+                }
             }
         }
 
-        // basket button
-        // idk why the button doesn`t work through import, so I did it here
-        if (productMap.value.isNotEmpty()) {
-            Button(
-                onClick = {
-                    scope.launch {
-                        if (sheetState.isVisible) {
-                            sheetState.hide()
-                        } else {
-                            sheetState.show()
-                        }
-                    }
-                },
-                contentPadding = PaddingValues(8.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF269DD1)
-                ),
-                shape = RoundedCornerShape(8.dp),
-                modifier = Modifier
-                    .size(width = 100.dp, height = 60.dp)
-                    .align(Alignment.BottomEnd)
-                    .padding(8.dp)
-            ) {
-                Row (
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_cart),
-                        contentDescription = null,
-                    )
-                    Text(
-                        text = "${totalPrice.toInt()}₽"
-                    )
-                }
-            }
-        }
         // bottom sheet
         if (sheetState.isVisible) {
             ModalBottomSheet(

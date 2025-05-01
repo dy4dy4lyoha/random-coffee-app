@@ -48,7 +48,8 @@ fun ProductCard(
     onAddToBasket: (Product) -> Unit,
     onDecreaseProduct: (Product) -> Unit,
     onIncreaseProduct: (Product) -> Unit,
-    productMap: MutableState<MutableMap<Product, Int>>
+    onNavigate: (Product?) -> Unit,
+    productMap: MutableState<MutableMap<Product, Int>>,
     ) {
 
     val countOfProduct = productMap.value[product] ?: 0
@@ -60,7 +61,9 @@ fun ProductCard(
         modifier = Modifier
             .padding(8.dp)
             .size(width = 180.dp, height = 240.dp)
-            .clickable {}
+            .clickable {
+                onNavigate(product)
+            }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -135,6 +138,7 @@ fun ProductCard(
                             },
                             fontSize = 22.sp,
                             fontFamily = openSansFamily,
+                            fontWeight = FontWeight.Bold,
                         )
                     }
                     AddToBasketButton (
