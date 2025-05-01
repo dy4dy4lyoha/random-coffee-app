@@ -31,6 +31,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -166,6 +167,7 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
                                     text = categorySlug,
                                     fontSize = 36.sp,
                                     fontFamily = openSansFamily,
+                                    color = Color.Black,
                                     modifier = Modifier
                                         .padding(
                                             start = dimensionResource(R.dimen.small_padding),
@@ -248,7 +250,8 @@ fun HomeScreen(allProductsViewModel: ProductViewModel = viewModel()) {
                                 .size(dimensionResource(R.dimen.small_icon))
                         )
                         Text(
-                            text = "${totalPrice.toInt()}₽"
+                            text = "${totalPrice.toInt()}₽",
+                            color = Color.White
                         )
                     }
                 }
